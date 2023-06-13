@@ -14,7 +14,7 @@ library(shinybusy)
 library(shinyWidgets)
 library(Distance)
 
-OnlineVersion = F
+OnlineVersion = T
 
 
 ##  YOU MIGHT NEED TO UNHASH THIS NEXT LINE FOR RUNNING ON YOUR LAPTOP
@@ -130,45 +130,42 @@ ui <- fluidPage(
              
              ### TAB 3. SIMULATIONS!!
              tabPanel("Run simulations",
-                      h3(strong(HTML("You are ready for this. We believe in you."))),
-                      h4( "Now running simulations with your chosen Parameters from Tab 2: Input parameters"),
-                      h4( "----------------------------------------------------------"),
-                      h5(  HTML("<u><em><span style='font-size: 18px;'>Introducing Two New Inputs</span></em></u>")),
-                      h4(( "N Transects: Run multiple transect replicates to obtain a density estimate")),
-                      h4(("N Simulations: Repeat the entire process multiple times")),
-                      h5(( "Then download your data using the 'Download Data' button below")),
-                      h4( "----------------------------------------------------------"),
+                      h3("Running your own simulations."),
+                      h5("The previous tab showed you a single transect with the parameters you input, but to estimate bias we need to run multiple transects. This tab will allow you to run simulations with the inputs chosen on Tab 2: Input parameters"),
+                      h5("Before running the simulations, you need to give 2 more parameters:"),
+                      h5("The number of transects to use to generate a density estimate."),
+                      h5("The number of simulations to run - how many density estimates would you like to use to estimate the bias."),
+                      
+                      fluidRow(
+                        column(5,
+                               numericInput ( inputId = "transects.per.sim"         , label = "N transects per simulation"                                , min = 20, max = 100, value = 2)),
+                        column(5,
+                               numericInput ( inputId = "n.sim"                     , label = "N simulations for density estimate"                        , min = 20, max = 10000, value = 2),
+                        )),
+                      h5("We suggest running a lot of simulations (e.g. 1000), but be aware this will take some time to run! After you click 'Run simulations' below, wait until you see the simulations appear, then your estimates are ready to download."),
+                      
+                      
                       # Sidebar with a slider input for number of bins
                       fluidRow(
-                        column(4,
+                        column(6,
                                actionButton("calculate", "Run simulations",style='background-color: #137ab3; color: #fff; padding:20px; font-size:200%')),
-                        column(4,
-                               h4("<--- Click 'Run simulations' "),
-                               h4("...wait until you see histograms... "),
-                               h4("then 'Download data' --->"),
-                        ),
-                        column(4,
+                        
+                        column(6,
                                downloadButton("downloadData", label = "Download data", style='background-color: yellow; color: black; padding:20px; font-size:200%')
                         ),
                         
                         
                       ),
-                      fluidRow(sidebarLayout(sidebarPanel(
-                        numericInput ( inputId = "transects.per.sim"         , label = "N transects per simulation"                                , min = 20, max = 100, value = 2),
-                        numericInput ( inputId = "n.sim"                     , label = "N simulations for density estimate"                        , min = 20, max = 10000, value = 2),
-                      ),
-                      mainPanel(
-                        h5(" Run a lot of simulations (e.g. 1000) with a decent number of transects (e.g. 100) in each simulation. The disparity between the density estimates obtained represents the estimation of bias in the distance method caused by the human avoidant behaviors you have inputted"),
-                        fluidRow(
-                          column(width = 6,plotOutput("histPlot")),
-                          column(width = 6,textOutput("textRender")),
-                        )
-                      )
-                      )
+                      fluidRow(
+                        column(width = 6,plotOutput("histPlot")),
+                        column(width = 6,textOutput("textRender")),
                       )
              )
   )
 )
+
+
+
 
 
 
@@ -366,18 +363,18 @@ server <- function(input, output,session) {
   
   output$textRender = renderText({
     if ( ! OnlineVersion){
-    med.av   = median( na.omit(staT()[,1]))
-    med.n.av = median( na.omit(staT()[,2]))
-    div = med.av / med.n.av
-    if ( div < 1){
-      paste0( "Your avoidance behaviours are causing an underestimate of your population density, with bias equal to " , round( 100-(div)*100 ,3),  "% -- To correct for this bias, multiply your density estimate by ", round(med.n.av/med.av,4))
-    } else {
-      paste0 ( "Your simulations suggest avoidance behaviours positively impact detectability. This is likely due to sampling error, try running with more replicates")
-    }
+      med.av   = median( na.omit(staT()[,1]))
+      med.n.av = median( na.omit(staT()[,2]))
+      div = med.av / med.n.av
+      if ( div < 1){
+        paste0( "Your avoidance behaviours are causing an underestimate of your population density, with an estimated bias of " , round( 100-(div)*100 ,2),  "%. To correct for this bias, multiply your density estimate by ", round(med.n.av/med.av,4),".")
+      } else {
+        paste0 ( "Your simulations suggest avoidance behaviours positively impact detectability. This is likely due to sampling error, try running with more replicates")
+      }
     } else { 
       u=staT()
       "No simulations on online version. To run simulations, please download shiny app onto your computer from: https://github.com/sankeydan/shinyDistanceBias/ "
-      }
+    }
   })
   
   ######### DOWNLOAD DATA
