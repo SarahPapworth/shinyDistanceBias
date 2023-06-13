@@ -14,7 +14,7 @@ library(shinybusy)
 library(shinyWidgets)
 library(Distance)
 
-OnlineVersion = T
+OnlineVersion = F
 
 
 ##  YOU MIGHT NEED TO UNHASH THIS NEXT LINE FOR RUNNING ON YOUR LAPTOP
