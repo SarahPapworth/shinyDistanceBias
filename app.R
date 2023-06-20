@@ -30,7 +30,7 @@ OnlineVersion = T
 ui <- fluidPage(
   navbarPage("Avoiding biased estimates", id = "nav",
              tabPanel("Introduction",
-                      h3("Estimating the impact of observer avoidance in distance sampling"),
+                      h3("Correcting for observer avoidance in distance sampling"),
                       h4("This ShinyApp is designed to allow you to estimate the effect of observer avoidance on density estimates. Do you get the 'Avoiding biased estimates' pun yet?"),
                       p("This because when animals flee before being detected, they become more easily missed by the observer. This can lead to an underestimation of the density of human avoidant animals, and an overall reduction in density estimates relative to actual densities. This app allows you to estimate the degree of bias using computer simulations. On this tab we explain what the simulations are doing, on the next one we explain the input parameters, and then on the final one you can run your own simulations."),
                       fluidRow(
@@ -57,27 +57,27 @@ ui <- fluidPage(
                       
                       h3("Input parameters for simulations"),
                       h5(tags$u("As the outputs of the model, and the estimated bias, depend on the inputs used, let's explore these inputs.")),
-                      h5("If you have measured avoidance behaviours such as the flight initiation distances or fleeing distances of animals in your population you can input them below. You could also use values extracted from the literature. Entered below are default values extracted from the manuscript which accompanies this ShinyApp."),
+                      h5("If you have measured avoidance behaviours such as the flight initiation distances or fleeing distances of animals in your population you can input them below. You could also use values extracted from the literature. Entered below are default values extracted from the manuscript which accompanies this ShinyApp (Excluding distance to border which is larger in the ShinyApp for clarity of visualisation)."),
                       
                       fluidRow(
                         column(4,
-                               numericInput ( inputId = "monk.scale.param"          , label = "Animal detection distance (m)"               , min = 1 , max = 10000 , value = 100),
+                               numericInput ( inputId = "monk.scale.param"          , label = "Animal detection distance (m)"               , min = 1 , max = 10000 , value = 60),
                                h5( em ( "How far away can animals detect the human observer?")),
-                               numericInput ( inputId = "scale.param"               , label = "Observer detection distance (m)"             , min = 10, max = 10000, value = 100),
+                               numericInput ( inputId = "scale.param"               , label = "Observer detection distance (m)"             , min = 10, max = 10000, value = 30),
                                h5( em ( "How far away can human observers dectect the animals?")),
-                               textInput    ( inputId = "fid.param"                 , label = 'Flight initiation distance(FID) in metres', "40,45,42"),
-                               h5( em ( "Enter multiple FIDs separated with commas, or just one value")),
-                               numericInput ( inputId = "monk_density_grp_km_2"     , label = "Density of animals (or animal groups) per sq. km"          , min = 0.1, max = 50, value = 4 ),
+                               textInput    ( inputId = "fid.param"                 , label = 'Flight initiation distance(FID) in metres', "43,44,57"),
+                               h5( em ( "Enter multiple FIDs separated with commas, or just one value. Default are three of the FIDs we found in our Monkey popuation")),
+                               numericInput ( inputId = "monk_density_grp_km_2"     , label = "Density of animals (or animal groups) per sq. km"          , min = 0.1, max = 50, value = 2.5 ),
                                h5( em ( "What animal density have you measured in your survey? Otherwise choose appropriate proxy"))),
                         
                         
                         column(4,
-                               numericInput ( inputId = "speed.dist.rate.decay"     , label = "Animal speed when not fleeing (m/ time step)"           , min = 0, max = 1, value = 0.1),
+                               numericInput ( inputId = "speed.dist.rate.decay"     , label = "Animal speed when not fleeing (m/ time step)"           , min = 0, max = 1, value = 0.15),
                                h5( em ( "How fast do animals move when observers are absent? Taken from an exponential curve where lower values equate to faster speeds")),
                                numericInput ( inputId = "norm.mean"                 , label = "Mean animal speed when fleeing (m/ time step)", min = 0, max = 100, value = 60),
                                h5( em ( "How fast do animals move when fleeing?")),
                                numericInput ( inputId = "norm.sd"                   , label = "Standard deviation of animal speed when fleeing"                         , min = 0, max = 50, value = 15),
-                               h5( em ( "Speed when fleeing can vary. The degree to which it varies is controlled by this parameter.")),
+                               h5( em ( "Speed when fleeing can vary. The degree to which it varies is controlled by this parameter. Consider mean speed divided by four as we chose in the manuscript")),
                                numericInput ( inputId = "kappa."                    , label = "Precision in direction of animal fleeing (kappa)"          , min = 0, max = 100, value = 50),
                                h5( em ( "Movements away from the observer are likely to be directed, but how much so? Exactly in the opposite direction (high kappa), or with some variance (low kappa)"))),
                         column(4,
