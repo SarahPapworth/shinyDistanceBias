@@ -5,10 +5,10 @@ account: sankey-dan
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 5252525
-bundleId: 7353004
+bundleId: 7306839
 url: https://sankey-dan.shinyapps.io/shinyDistanceBias/
-when: 1686907284.18342
-lastSyncTime: 1686907284.18343
+when: 1685976794.2701
+lastSyncTime: 1685976794.27012
 asMultiple: FALSE
 asStatic: FALSE
-ignoredFiles: Data primate survey.xlsx|Source/quickLibrary.r|shinyDistanceBias-master
+ignoredFiles: animation2.gif|app2.r|Source/quickLibrary.r

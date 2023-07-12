@@ -1,0 +1,62 @@
+README for ShinyDistanceBias App
+1. System Requirements
+Software Dependencies
+
+This ShinyDistanceBias application requires the following software packages:
+  
+  R version 4.1.2 or higher
+RStudio version 1.4 or higher
+Shiny package version 1.6.0 or higher
+circular package (latest version)
+shinybusy package (latest version)
+shinyWidgets package (latest version)
+Distance package (latest version)
+Operating Systems
+
+The application is platform-independent but has only been tested on Windows 10. However, it should run on any operating system where R and RStudio can be installed, including:
+  
+  Windows 10 or higher
+macOS Mojave (10.14) or higher
+Ubuntu 18.04 LTS or higher
+Tested Versions
+
+The software ShinyDistanceBias v1.0 has been tested on Windows 10 using R version 4.1.2 and RStudio version 1.4.
+
+Required Non-standard Hardware
+
+No non-standard hardware is required.
+
+2. Installation Guide
+Instructions
+
+Install R from https://www.r-project.org/
+  Install RStudio from https://rstudio.com/products/rstudio/download/
+  Open RStudio and install the required packages using the following command in the RStudio console:
+  r
+Copy code
+install.packages(c("shiny", "circular", "shinybusy", "shinyWidgets", "Distance"))
+Download the source code of the ShinyDistanceBias application from the provided repository.
+Open the .R file in RStudio and click 'Run App' to start the application.
+Typical Install Time
+
+The typical install time on a standard desktop computer is less than a minute, depending on the internet connection speed for downloading and installing the required packages.
+
+3. Demo
+Instructions to Run on Data
+
+All instructions to run your data are provided in the app itself. You will need to load your data into the app, adjust the parameters as needed, and initiate the analysis.
+
+Expected Output
+
+The expected output is thoroughly explained in the ShinyDistanceBias app. You can download the output by clicking the provided button within the app.
+
+Expected Run Time for Demo
+
+The expected run time varies according to the number of replicates. For a thorough analysis, it could take over 10 hours.
+
+4. Instructions for Use
+All instructions for use are provided in the ShinyDistanceBias app. Load your data, adjust the settings as needed, and start the analysis. For additional questions or troubleshooting, refer to the "Help" section within the app.
+
+Reproduction Instructions
+
+(Optional) If there are any quantitative results in the manuscript, instructions for reproducing these results can be added here.
