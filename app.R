@@ -13,21 +13,31 @@ rm(list=ls())
 # copied this code from: https://stackoverflow.com/questions/45346367/installing-required-packages-in-shiny-app
 # in the end tried to copy code from https://github.com/SandraKla/Zlog_AdRI
 
-#list of packages required
-list.of.packages <- c("circular","shiny","shinyWidgets","Distance","shinybusy")
+# load packages
+if("shiny" %in% rownames(installed.packages())){
+  library(shiny)} else{
+    install.packages("shiny")
+    library(shiny)}
 
-#checking missing packages from list
-new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+if("circular" %in% rownames(installed.packages())){
+  library(circular)} else{
+    install.packages("circular")
+    library(circular)}
 
-#install missing ones
-if(length(new.packages)) install.packages(new.packages, dependencies = TRUE)
+if("Distance" %in% rownames(installed.packages())){
+  library(Distance)} else{
+    install.packages("Distance")
+    library(Distance)}
 
-# load in needed packages
-library(shiny)
-library(shinybusy)
-library(shinyWidgets)
-library(Distance)
-library(circular)
+if("shinybusy" %in% rownames(installed.packages())){
+  library(shinybusy)} else{
+    install.packages("shinybusy")
+    library(shinybusy)}
+
+if("shinyWidgets" %in% rownames(installed.packages())){
+  library(shinyWidgets)} else{
+    install.packages("shinyWidgets")
+    library(shinyWidgets)}
 
 OnlineVersion = T
 
