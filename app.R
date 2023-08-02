@@ -13,18 +13,16 @@ rm(list=ls())
 # make sure needed packages and dependencies are installed
 # copied this code from: https://stackoverflow.com/questions/45346367/installing-required-packages-in-shiny-app
 
-# list packages used
-package_list <- c('shiny', 'circular', 'shinybusy', 'shinyWidgets', 'Distance')
-
-# checking missing packages from list
-new_packages <- package_list[!(package_list %in% installed.packages()[,"Package"])]
+if("circular" %in% rownames(installed.packages())){
+  library(circular)} else{
+    install.packages("circular")
+    library(circular)}
 
 #install missing ones
 if(length(new_packages)) install.packages(new_packages, dependencies = TRUE)
 
 # load in needed packages
 library(shiny)
-library(circular)
 library(shinybusy)
 library(shinyWidgets)
 library(Distance)
