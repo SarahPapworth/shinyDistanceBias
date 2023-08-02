@@ -7,10 +7,11 @@
 #    http://shiny.rstudio.com/
 #
 
-#rm(list=ls())
+rm(list=ls())
 
 # make sure needed packages and dependencies are installed
 # copied this code from: https://stackoverflow.com/questions/45346367/installing-required-packages-in-shiny-app
+# in the end tried to copy code from https://github.com/SandraKla/Zlog_AdRI
 
 if("circular" %in% rownames(installed.packages())){
   library(circular)} else{
