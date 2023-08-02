@@ -7,8 +7,7 @@
 #    http://shiny.rstudio.com/
 #
 
-
-rm(list=ls())
+#rm(list=ls())
 
 # make sure needed packages and dependencies are installed
 # copied this code from: https://stackoverflow.com/questions/45346367/installing-required-packages-in-shiny-app
@@ -18,9 +17,6 @@ if("circular" %in% rownames(installed.packages())){
     install.packages("circular")
     library(circular)}
 
-#install missing ones
-if(length(new_packages)) install.packages(new_packages, dependencies = TRUE)
-
 # load in needed packages
 library(shiny)
 library(shinybusy)
@@ -28,7 +24,6 @@ library(shinyWidgets)
 library(Distance)
 
 OnlineVersion = T
-
 
 ##  YOU MIGHT NEED TO UNHASH THIS NEXT LINE FOR RUNNING ON YOUR LAPTOP
 
