@@ -39,6 +39,12 @@ if("shinyWidgets" %in% rownames(installed.packages())){
     install.packages("shinyWidgets")
     library(shinyWidgets)}
 
+if("R.utils" %in% rownames(installed.packages())){
+  library(R.utils)} else{
+    install.packages("R.utils")
+    library(R.utils)}
+
+
 OnlineVersion = F
 
 ##  YOU MIGHT NEED TO UNHASH THIS NEXT LINE FOR RUNNING ON YOUR LAPTOP
