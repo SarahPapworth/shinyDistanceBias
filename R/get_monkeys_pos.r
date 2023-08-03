@@ -1,4 +1,4 @@
-library(circular)
+#library(circular)
 
 # This function gives the movement of the monkeys at each time step
 # Direction of movement depends on whether monkeys detects observer and whether he is close enough (FID) to flee
@@ -33,7 +33,7 @@ get_monkeys_pos = function( monkeys.pos ,
   # pois.const = 10
   
   # libraries
-  library(circular)
+  #library(circular)
   
   #add in monkey direction and new position
   num.monkeys = nrow(monkeys.pos)
