@@ -39,7 +39,7 @@ if("shinyWidgets" %in% rownames(installed.packages())){
     install.packages("shinyWidgets")
     library(shinyWidgets)}
 
-OnlineVersion = T
+OnlineVersion = F
 
 ##  YOU MIGHT NEED TO UNHASH THIS NEXT LINE FOR RUNNING ON YOUR LAPTOP
 
