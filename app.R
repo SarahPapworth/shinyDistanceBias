@@ -45,7 +45,9 @@ if("R.utils" %in% rownames(installed.packages())){
     library(R.utils)}
 
 
-OnlineVersion = F
+# Try and tell whether the app is running locally or not
+# borrowed from: https://github.com/rstudio/shiny/issues/2923 and https://stackoverflow.com/questions/31423144/how-to-know-if-the-app-is-running-at-local-or-on-server-r-shiny
+if(Sys.getenv('SHINY_PORT') == ""){OnlineVersion = F} else{OnlineVersion = T}
 
 ##  YOU MIGHT NEED TO UNHASH THIS NEXT LINE FOR RUNNING ON YOUR LAPTOP
 
