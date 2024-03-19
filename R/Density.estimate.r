@@ -19,7 +19,11 @@ if ( class( ds1) == "try-error"){
   se = NA
   sample.truncation = NA
   sample.size = length( na.omit ( dat$distance))
+  CvMW = NA
+  CVMp = NA
 } else {
+  CvMW = ddf.gof(ds1)$dsgof$CvM$W
+  CvMp = ddf.gof(ds1)$dsgof$CvM$p
   d2 = summary(ds1)
   est =  d2$dht$individuals$D$Estimate # location of density estimate in summary output
   # location of density estimate confidence limits
@@ -29,10 +33,11 @@ if ( class( ds1) == "try-error"){
   se = d2$dht$individuals$D$se
   sample.truncation = d2$dht$individuals$summary$n
   sample.size = length( na.omit ( dat$distance))
+ 
 }
 
 # plot detection function?
-if ( plot.detect){
+if(plot.detect){
   try(plot(ds1, main = paste( vars[i,], collapse = "")))
 }
 
@@ -42,5 +47,8 @@ return(  list (
          ucl                  =  ucl               ,
          se                   =  se                ,
          sample.truncation    =  sample.truncation ,
-         sample.size          =  sample.size       ))
+         sample.size          =  sample.size,       
+         CvMW                 =  CvMW,
+         CvMp                 =  CvMp
+))
 }
