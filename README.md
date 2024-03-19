@@ -10,7 +10,7 @@ This app should be able to be installed and run by using the following code.
 
 ```{r}
 # run the code using shiny
-shiny::runGitHub('sankeydan/shinyDistanceBias')
+shiny::runGitHub('SarahPapworth/shinyDistanceBias')
 ```
 
 The following packages may need to be installed to aid running of the app.
