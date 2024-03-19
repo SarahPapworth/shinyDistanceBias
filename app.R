@@ -51,11 +51,30 @@ if(Sys.getenv('SHINY_PORT') == ""){OnlineVersion = F} else{OnlineVersion = T}
 
 ##  YOU MIGHT NEED TO UNHASH THIS NEXT LINE FOR RUNNING ON YOUR LAPTOP
 
-#source (file.path ( getwd() , "source" , "quickLibrary.r"))
+#source(file.path ( getwd() , "source" , "quickLibrary.r"))
 
 
+#When running locally, unhash these so that functions are imported
 
-
+#source("https://raw.githubusercontent.com/SarahPapworth/shinyDistanceBias/Sarah-edits/R/Density.estimate.r")
+#source("https://raw.githubusercontent.com/SarahPapworth/shinyDistanceBias/Sarah-edits/R/camwalk.funct.r")
+#source("https://raw.githubusercontent.com/SarahPapworth/shinyDistanceBias/Sarah-edits/R/datetimeDS.r")
+#source("https://raw.githubusercontent.com/SarahPapworth/shinyDistanceBias/Sarah-edits/R/detect.funct.r")
+#source("https://raw.githubusercontent.com/SarahPapworth/shinyDistanceBias/Sarah-edits/R/folderDS.R")
+#source("https://raw.githubusercontent.com/SarahPapworth/shinyDistanceBias/Sarah-edits/R/get_heading.r")
+#source("https://raw.githubusercontent.com/SarahPapworth/shinyDistanceBias/Sarah-edits/R/get_monkeys_pos.r")
+#source("https://raw.githubusercontent.com/SarahPapworth/shinyDistanceBias/Sarah-edits/R/lmer_outputDS.r")
+#source("https://raw.githubusercontent.com/SarahPapworth/shinyDistanceBias/Sarah-edits/R/model2.R")
+#source("https://raw.githubusercontent.com/SarahPapworth/shinyDistanceBias/Sarah-edits/R/mon.cam.dist.r")
+#source("https://raw.githubusercontent.com/SarahPapworth/shinyDistanceBias/Sarah-edits/R/monk.detect.funct.r")
+#source("https://raw.githubusercontent.com/SarahPapworth/shinyDistanceBias/Sarah-edits/R/omit.rows.perp.r")
+#source("https://raw.githubusercontent.com/SarahPapworth/shinyDistanceBias/Sarah-edits/R/perp.dist.func.r")
+#source("https://raw.githubusercontent.com/SarahPapworth/shinyDistanceBias/Sarah-edits/R/plot.grid.monk.r")
+#source("https://raw.githubusercontent.com/SarahPapworth/shinyDistanceBias/Sarah-edits/R/quickLibrary.r")
+#source("https://raw.githubusercontent.com/SarahPapworth/shinyDistanceBias/Sarah-edits/R/takestockDS.R")
+#source("https://raw.githubusercontent.com/SarahPapworth/shinyDistanceBias/Sarah-edits/R/work.in.progress.R")
+#source("https://raw.githubusercontent.com/SarahPapworth/shinyDistanceBias/Sarah-edits/R/xylims.R")
+#source("https://raw.githubusercontent.com/SarahPapworth/shinyDistanceBias/Sarah-edits/R/model.R")
 
 
 # Define UI
@@ -174,7 +193,7 @@ ui <- fluidPage(
                         column(5,
                                numericInput ( inputId = "n.sim"                     , label = "N simulations for density estimate"                        , min = 20, max = 10000, value = 2),
                         )),
-                      h5("We suggest running a lot of simulations (e.g. 1000), but be aware this will take some time to run! After you click 'Run simulations' below, wait until you see the simulations appear, then your estimates are ready to download."),
+                      h5("We suggest running a lot of simulations (e.g. 1000), but be aware this will take some time to run! After you click 'Run simulations' below, wait until you see the simulations appear, then your estimates and measurements of their fit to the data (Cramer von-Mises W and p) are ready to download."),
                       
                       
                       # Sidebar with a slider input for number of bins
@@ -192,9 +211,16 @@ ui <- fluidPage(
                         column(width = 6,plotOutput("histPlot")),
                         column(width = 6,textOutput("textRender")),
                       )
+             ),
+             ### TAB 4. plotchecking
+             tabPanel("Model fit",
+                      h3("Checking model fit."),
+                      h5("The previous tab showed you output estimates, but does not assess how well the generated models fit the data. This tab allows you to estimate this for each simulation run on the previous page."),
+                      
+                        
              )
-  )
-)
+  ))
+
 
 
 
@@ -268,6 +294,7 @@ server <- function(input, output,session) {
         withProgress(message = 'Running simulations', value = j/input$n.sim, {
           d1s = NULL
           d2s= NULL
+          
           for ( i in 1:input$transects.per.sim){
             
             d = model ( 
@@ -324,17 +351,26 @@ server <- function(input, output,session) {
           if ( any( !is.na(dat$distance))){
             den= R.utils::withTimeout(Density.estimate(dat) , timeout = 400, onTimeout = "error")
             den1 = den$est
+            CvMW1 = den$CvMW
+            CvMp1 = den$CvMp
+            
           } else {
             den1=0
+            CvMW1=0
+            CvMp1=0
           }
           if ( any( !is.na(dat2$distance))){
             den= R.utils::withTimeout(Density.estimate(dat2) , timeout = 400, onTimeout = "error")
             den2 = den$est
+            CvMW2 = den$CvMW
+            CvMp2 = den$CvMp
           } else {
             den2=0
+            CvMW2=0
+            CvMp2=0
           }
           
-          dens = rbind(dens, c(den1,den2))
+          dens = rbind(dens, c(den1,den2,CvMW1,CvMW2,CvMp1,CvMp2,j))
           
         })
         
@@ -342,7 +378,7 @@ server <- function(input, output,session) {
         #incProgress(1/input$n.sim, detail = paste("Doing part", i, "/", input$n.sim ))
       }
       dens = as.data.frame(dens)
-      names ( dens ) = c( "avoidance" , "noAvoidance")
+      names ( dens ) = c("avoidanceEst" , "noAvoidanceEst","CvMavoidW","CvMnotavoidW","CvMavoidp","CvMnotavoidp","run")
       dens
     } else {
       NA
@@ -378,6 +414,7 @@ server <- function(input, output,session) {
   
   
   ####### DENSITY OUTPUT PLOT
+
   output$histPlot = renderPlot({
     if ( !OnlineVersion){
       par(mfrow=c(3,1))
@@ -385,6 +422,7 @@ server <- function(input, output,session) {
       abline(v =median( na.omit(staT()[,1])),col = "red")
       hist(staT()[,2], main = paste0 ( input$n.sim," density estimates with no observer avoidance"),xlab="",xlim = c(0,max(staT(),na.rm=T)+1),  sub = paste ( "median density estimate =", round ( median( na.omit(staT()[,2])),4)))
       abline(v =median( na.omit(staT()[,2])),col = "red")
+      
     } else { 
       u = staT()
       par ( mar = rep(0,4))
@@ -397,11 +435,13 @@ server <- function(input, output,session) {
     if ( ! OnlineVersion){
       med.av   = median( na.omit(staT()[,1]))
       med.n.av = median( na.omit(staT()[,2]))
+      p.av   = length( na.omit(staT()[5,]<0.05))
+      p.n.av = length( na.omit(staT()[6,]<0.05))
       div = med.av / med.n.av
       if ( div < 1){
-        paste0( "Your avoidance behaviours are causing an underestimate of your population density, with an estimated bias of " , round( 100-(div)*100 ,2),  "%. To correct for this bias, multiply your density estimate by ", round(med.n.av/med.av,4),".")
+        paste0( "Your avoidance behaviours may be causing an underestimate of your population density, with an estimated bias of " , round( 100-(div)*100 ,2),  "%. Cramer von-Mises tests suggest the model is a poor fit to the data for ", p.av, " avoidant stimulations and ", p.n.av, " of the non-avoidant simulations.")
       } else {
-        paste0 ( "Your simulations suggest avoidance behaviours positively impact detectability. This is likely due to sampling error, try running with more replicates")
+        paste0 ( "Your simulations suggest avoidance behaviours positively impact detectability. This may be due to sampling error, try running with more replicates. Cramer von-Mises tests suggest the model is a poor fit to the data for ", p.av, " avoidant stimulations and ", p.n.av, " of the non-avoidant simulations.")
       }
     } else { 
       u=staT()
